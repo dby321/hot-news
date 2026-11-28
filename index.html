@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>热浪 · 每日热点聚合</title>
+    <meta name="description" content="每 3 小时自动采集知乎、微博、虎嗅、少数派等 22 个主流平台热榜，免登录浏览与全站搜索。" />
+    <meta name="theme-color" content="#ff4d2e" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23ff2d55'/%3E%3Cstop offset='1' stop-color='%23ff9500'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M12 2c1 4-3 5.5-3 9a3 3 0 0 0 6 0c0-1.2-.5-2-.5-2 2.5 1.5 4.5 4 4.5 7a7 7 0 1 1-14 0C5 9.5 11 8 12 2z'/%3E%3C/svg%3E"
+    />
+    <script>
+      (function () {
+        var t =
+          new URLSearchParams(location.search).get('theme') ||
+          localStorage.getItem('hw-theme') ||
+          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#all" id="brand">
+          <svg class="brand-flame" viewBox="0 0 24 24" aria-hidden="true">
+            <defs>
+              <linearGradient id="flame-g" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#ff2d55" />
+                <stop offset="1" stop-color="#ff9500" />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#flame-g)"
+              d="M12 2c1 4-3 5.5-3 9a3 3 0 0 0 6 0c0-1.2-.5-2-.5-2 2.5 1.5 4.5 4 4.5 7a7 7 0 1 1-14 0C5 9.5 11 8 12 2z"
+            />
+          </svg>
+          <span class="brand-name">热浪</span>
+          <span class="brand-sub">每日热点聚合</span>
+        </a>
+        <div class="header-actions">
+          <span class="update-badge" id="update-badge" hidden></span>
+          <label class="history-picker" title="查看历史快照">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M13 3a9 9 0 0 0-9 9H1l4 4 4-4H6a7 7 0 1 1 7 7v2a9 9 0 0 0 0-18zm-1 5v5l4.3 2.5.7-1.2-3.5-2V8H12z"
+              />
+            </svg>
+            <select id="history-select" aria-label="历史快照">
+              <option value="">最新</option>
+            </select>
+          </label>
+          <button class="icon-btn" id="theme-toggle" type="button" aria-label="切换明暗主题">
+            <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5h0l1 3h-2l1-3zm0 20h0l-1-3h2l-1 3zM2 12l3-1v2l-3-1zm20 0-3 1v-2l3 1zM4.9 4.9l2.8 1.4-1.4 1.4L4.9 4.9zm14.2 14.2-2.8-1.4 1.4-1.4 1.4 2.8zM4.9 19.1l1.4-2.8 1.4 1.4-2.8 1.4zM19.1 4.9l-1.4 2.8-1.4-1.4 2.8-1.4z"
+              />
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"
+          />
+        </svg>
+        <input
+          id="search-input"
+          type="search"
+          placeholder="搜索全部平台热点，如：AI / 高考 / 苹果…"
+          autocomplete="off"
+          aria-label="搜索热点"
+        />
+        <button class="search-clear" id="search-clear" type="button" aria-label="清空搜索" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"
+            />
+          </svg>
+        </button>
+        <kbd class="search-kbd" id="search-kbd">/</kbd>
+      </div>
+    </div>
+
+    <nav class="platform-bar" id="platform-bar" aria-label="平台筛选"></nav>
+
+    <div class="banner" id="banner" hidden></div>
+
+    <main id="content" aria-live="polite">
+      <div class="skeleton-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        数据每 3 小时自动采集自各平台公开接口 · 内容版权归原平台所有 · 本站免登录、不收集任何用户信息
+      </p>
+      <p id="footer-stats"></p>
+    </footer>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
